@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeonVault — Movies, Games & More</title>
+<style>
+:root{--bg:#070912;--panel:#0f1424;--panel2:#151c31;--text:#f7f9ff;--muted:#9da9c8;--blue:#4da3ff;--purple:#8b5cf6;--pink:#ec4899;--green:#35e0a1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 15% 0%,#17255455,transparent 30%),radial-gradient(circle at 90% 20%,#581c8750,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;background:#070912d9;backdrop-filter:blur(16px);border-bottom:1px solid #25304d}
+.nav{max-width:1180px;margin:auto;padding:14px 20px;display:flex;align-items:center;gap:24px;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:.5px}.logoMark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));display:grid;place-items:center;box-shadow:0 0 25px #4da3ff55;font-size:21px}.logoText{font-size:20px}.logoText span{color:#70b8ff}
+.navlinks{display:flex;gap:18px}.navlinks a{color:#cbd5ef;text-decoration:none;font-weight:700;font-size:14px}.navlinks a:hover{color:#fff}
+main{max-width:1180px;margin:auto;padding:28px 20px 70px}
+.hero{min-height:430px;border:1px solid #293556;border-radius:28px;padding:55px 45px;display:flex;align-items:center;background:linear-gradient(120deg,#0d1630e8,#0c1020e8),radial-gradient(circle at 75% 35%,#4d8dff40,transparent 30%);overflow:hidden;position:relative}
+.hero:after{content:"";position:absolute;width:330px;height:330px;border-radius:50%;right:-90px;top:-80px;border:70px solid #4da3ff15;box-shadow:0 0 100px #8b5cf620}
+.badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:#15213c;border:1px solid #31446d;color:#8fc7ff;font-weight:800;font-size:12px;letter-spacing:1px}
+h1{font-size:clamp(48px,8vw,88px);line-height:.9;margin:18px 0;background:linear-gradient(90deg,#fff,#75baff,#c59cff);-webkit-background-clip:text;color:transparent;max-width:780px}
+.hero p{max-width:690px;color:#aebbd8;font-size:18px;line-height:1.6}
+.cta{display:inline-block;margin-top:15px;padding:13px 18px;border-radius:12px;background:linear-gradient(90deg,#3b82f6,#7c3aed);color:white;text-decoration:none;font-weight:900;box-shadow:0 10px 30px #3b82f633}
+section{margin-top:48px}.sectionTop{display:flex;align-items:end;justify-content:space-between;gap:15px;flex-wrap:wrap}h2{font-size:32px;margin:0 0 8px}.sub{color:var(--muted);margin:0 0 18px}
+.search{width:min(430px,100%);display:flex;background:#0d1323;border:1px solid #2a3859;border-radius:13px;overflow:hidden}.search input{flex:1;background:none;border:0;outline:0;color:#fff;padding:14px;font-size:15px}.search button{border:0;background:#1e2e4f;color:#fff;padding:0 17px;font-weight:800;cursor:pointer}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}.filter{border:1px solid #293756;background:#101729;color:#c9d5ed;border-radius:999px;padding:9px 13px;cursor:pointer;font-weight:800}.filter.active,.filter:hover{background:#234b7f;border-color:#4da3ff;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:linear-gradient(160deg,#11182a,#0c111e);border:1px solid #263451;border-radius:18px;padding:20px;min-height:190px;transition:.2s;position:relative;overflow:hidden}.card:hover{transform:translateY(-5px);border-color:#4d8cff;box-shadow:0 15px 35px #0005}
+.icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#203c69,#4b2d78);font-size:25px;margin-bottom:15px}.card h3{margin:0 0 7px}.card p{color:#9eabc7;line-height:1.5;margin:0 0 15px}.tag{display:inline-block;font-size:11px;font-weight:900;color:#8fc7ff;background:#132440;padding:6px 8px;border-radius:7px}
+.btn{display:inline-block;padding:10px 13px;border-radius:9px;background:#1b6ac5;color:#fff;text-decoration:none;font-weight:800;font-size:13px}
+.movie{min-height:210px}.movie .poster{height:105px;border-radius:12px;background:linear-gradient(135deg,#1d4ed8,#7c3aed,#be185d);display:grid;place-items:center;font-size:35px;margin-bottom:15px}
+.empty{display:none;padding:20px;border:1px dashed #344565;border-radius:15px;color:#9eabc7}
+.notice{background:#11182a;border:1px solid #293756;border-left:4px solid #4da3ff;padding:18px;border-radius:12px;color:#b8c4dd;line-height:1.6}
+footer{border-top:1px solid #202b44;color:#74819f;text-align:center;padding:28px 20px}
+@media(max-width:700px){.navlinks{display:none}.hero{padding:35px 24px;min-height:380px}.hero:after{display:none}}
+
+.playerOverlay{display:none;position:fixed;inset:0;background:#050711ee;backdrop-filter:blur(10px);z-index:100;padding:20px}
+.playerOverlay.show{display:flex;align-items:center;justify-content:center}
+.playerPanel{width:min(1000px,96vw);background:#0d1425;border:1px solid #34466d;border-radius:20px;box-shadow:0 25px 80px #0009;overflow:hidden}
+.playerHead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #263451}
+.playerTitle{font-weight:900;font-size:17px}
+.closePlayer{border:0;background:#202c46;color:#fff;width:38px;height:38px;border-radius:10px;font-size:22px;cursor:pointer}
+.playerFrame{width:100%;aspect-ratio:16/9;background:#03050a;border:0;display:block}
+.playerFallback{padding:16px 18px;color:#aebbd8;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.playerFallback a{color:#fff;background:#2879d8;padding:10px 14px;border-radius:9px;text-decoration:none;font-weight:800}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<a class="logo" href="#"><div class="logoMark">N</div><div class="logoText">NEON<span>VAULT</span></div></a>
+<div class="navlinks"><a href="#movies">Movies</a><a href="#games">Games</a><a href="#categories">Categories</a><a href="#tools">Tools</a></div>
+</div></header>
+
+<main>
+<section class="hero">
+<div>
+<div class="badge">YOUR DIGITAL HANGOUT</div>
+<h1>WATCH.<br>PLAY.<br>EXPLORE.</h1>
+<p>Movies, browser games, categories and useful web tools — all in one slick homepage built for GitHub Pages.</p>
+<a class="cta" href="#games">EXPLORE THE HUB →</a>
+</div>
+</section>
+
+<section id="categories">
+<div class="sectionTop"><div><h2>Browse Categories</h2><p class="sub">Jump straight to what you want.</p></div></div>
+<div class="grid">
+<a class="card" href="#movies" style="text-decoration:none;color:inherit"><div class="icon">🎬</div><h3>Movies</h3><p>Search a curated collection and jump to legal viewing options.</p></a>
+<a class="card" href="#games" style="text-decoration:none;color:inherit"><div class="icon">🎮</div><h3>Arcade</h3><p>Quick browser games and indie game collections.</p></a>
+<a class="card" href="#tools" style="text-decoration:none;color:inherit"><div class="icon">🧰</div><h3>Web Tools</h3><p>Useful privacy and web resources.</p></a>
+<a class="card" href="https://www.youtube.com/" target="_blank" style="text-decoration:none;color:inherit"><div class="icon">▶️</div><h3>Video</h3><p>Open popular video platforms and official channels.</p></a>
+</div>
+</section>
+
+<section id="movies">
+<div class="sectionTop"><div><h2>🎬 Movie Search</h2><p class="sub">Search this site's movie collection.</p></div>
+<div class="search"><input id="movieSearch" placeholder="Search movies..." autocomplete="off"><button onclick="filterMovies()">SEARCH</button></div></div>
+<div class="grid" id="movieGrid">
+<div class="card movie" data-title="The General"><div class="poster">🎞️</div><h3>The General</h3><p>Classic silent comedy available through Internet Archive.</p><a class="btn" href="https://archive.org/details/the-general-1926" onclick="openPlayer(event,this.href,'The General')">Watch</a></div>
+<div class="card movie" data-title="Night of the Living Dead"><div class="poster">🧟</div><h3>Night of the Living Dead</h3><p>Public-domain horror classic; availability can vary by region.</p><a class="btn" href="https://archive.org/details/night_of_the_living_dead" onclick="openPlayer(event,this.href,'Night of the Living Dead')">Watch</a></div>
+<div class="card movie" data-title="His Girl Friday"><div class="poster">📰</div><h3>His Girl Friday</h3><p>Classic comedy-drama available from public collections.</p><a class="btn" href="https://archive.org/details/his_girl_friday" onclick="openPlayer(event,this.href,'His Girl Friday')">Watch</a></div>
+<div class="card movie" data-title="The Kid"><div class="poster">🎩</div><h3>The Kid</h3><p>Charlie Chaplin classic available through Internet Archive collections.</p><a class="btn" href="https://archive.org/details/the-kid-1921" onclick="openPlayer(event,this.href,'The Kid')">Watch</a></div>
+</div>
+<div class="empty" id="emptyMovies">No movie cards matched that search.</div>
+</section>
+
+<section id="games">
+<div class="sectionTop"><div><h2>🎮 Game Cards</h2><p class="sub">Pick a game hub and start playing in your browser.</p></div></div>
+<div class="grid">
+<div class="card"><div class="icon">⚡</div><h3>CrazyGames</h3><p>Huge collection of quick browser games across many genres.</p><span class="tag">ARCADE</span><br><br><a class="btn" href="https://www.crazygames.com/" onclick="openPlayer(event,this.href,'CrazyGames')">PLAY →</a></div>
+<div class="card"><div class="icon">🕹️</div><h3>itch.io Free Games</h3><p>Find free indie games and experimental projects from creators.</p><span class="tag">INDIE</span><br><br><a class="btn" href="https://itch.io/games/free" onclick="openPlayer(event,this.href,'itch.io Free Games')">EXPLORE →</a></div>
+<div class="card"><div class="icon">🌟</div><h3>Game Jolt</h3><p>Discover community-made games, projects and creators.</p><span class="tag">COMMUNITY</span><br><br><a class="btn" href="https://gamejolt.com/games" onclick="openPlayer(event,this.href,'Game Jolt')">EXPLORE →</a></div>
+<div class="card"><div class="icon">🧩</div><h3>Puzzle Zone</h3><p>Use the game hubs above to find puzzles, strategy games and more.</p><span class="tag">PUZZLES</span><br><br><a class="btn" href="https://www.crazygames.com/t/puzzle" onclick="openPlayer(event,this.href,'Puzzle Games')">PLAY →</a></div>
+</div>
+</section>
+
+<section id="tools">
+<h2>🧰 Web Tools</h2>
+<p class="sub">Useful resources without trying to bypass network restrictions.</p>
+<div class="grid">
+<div class="card"><div class="icon">🔐</div><h3>Privacy</h3><p>Learn about safer browsing and privacy practices.</p><a class="btn" href="https://www.eff.org/issues/privacy" target="_blank">LEARN →</a></div>
+<div class="card"><div class="icon">🌐</div><h3>Internet Archive</h3><p>Explore a massive public digital library of books, media and websites.</p><a class="btn" href="https://archive.org/" target="_blank">OPEN →</a></div>
+<div class="card"><div class="icon">🛡️</div><h3>Network Tools</h3><p>For school or workplace networks, use only tools and services permitted by the administrator.</p><a class="btn" href="https://www.cloudflare.com/learning/privacy/what-is-a-vpn/" target="_blank">READ →</a></div>
+</div>
+<div class="notice" style="margin-top:18px"><strong>Proxy note:</strong> This site does not provide a tool for bypassing school, workplace, parental, or other access controls. If you need a proxy/VPN for an allowed purpose, use a service approved for your network.</div>
+</section>
+</main>
+<footer>NEONVAULT • Built for GitHub Pages • Use linked services according to their rules and applicable laws.</footer>
+<script>
+function filterMovies(){
+ const q=document.getElementById('movieSearch').value.trim().toLowerCase();
+ let shown=0;
+ document.querySelectorAll('#movieGrid .movie').forEach(card=>{
+   const ok=card.dataset.title.toLowerCase().includes(q);
+   card.style.display=ok?'block':'none'; if(ok)shown++;
+ });
+ document.getElementById('emptyMovies').style.display=shown?'none':'block';
+}
+document.getElementById('movieSearch').addEventListener('input',filterMovies);
+
+function openPlayer(e,url,title){
+ e.preventDefault();
+ document.getElementById('playerTitle').textContent=title;
+ document.getElementById('playerExternal').href=url;
+ document.getElementById('playerFrame').src=url;
+ document.getElementById('playerOverlay').classList.add('show');
+ document.getElementById('playerOverlay').setAttribute('aria-hidden','false');
+ document.body.style.overflow='hidden';
+}
+function closePlayer(){
+ document.getElementById('playerFrame').src='about:blank';
+ document.getElementById('playerOverlay').classList.remove('show');
+ document.getElementById('playerOverlay').setAttribute('aria-hidden','true');
+ document.body.style.overflow='';
+}
+document.getElementById('playerOverlay').addEventListener('click',function(e){
+ if(e.target===this) closePlayer();
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closePlayer();});
+
+</script>
+
+<div class="playerOverlay" id="playerOverlay" aria-hidden="true">
+ <div class="playerPanel" role="dialog" aria-modal="true">
+  <div class="playerHead"><div class="playerTitle" id="playerTitle">Now Playing</div>
+   <button class="closePlayer" onclick="closePlayer()" aria-label="Close">×</button>
+  </div>
+  <iframe id="playerFrame" class="playerFrame" src="about:blank"
+   allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+   referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <div class="playerFallback"><span>If the site blocks embedding, use the button below.</span>
+   <a id="playerExternal" href="#" target="_blank" rel="noopener">Open source ↗</a>
+  </div>
+ </div>
+</div>
+
+</body></html>
